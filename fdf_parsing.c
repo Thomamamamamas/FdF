@@ -6,7 +6,7 @@
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 14:54:45 by tcasale           #+#    #+#             */
-/*   Updated: 2021/12/12 14:24:12 by tcasale          ###   ########.fr       */
+/*   Updated: 2021/12/13 15:23:38 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,13 +111,13 @@ size_t	count_nbr(char *str)
 }
 
 //renvoie un array des entiers de la chaine str
-int	*get_nbr(char *str)
+float	*get_nbr(char *str)
 {
 	int	n;
 	int	i;
-	int	*nb_array;
+	float	*nb_array;
 
-	nb_array = (int *)malloc(sizeof(int) * count_nbr(str) + 1);
+	nb_array = (float *)malloc(sizeof(float) * count_nbr(str) + 1);
 	ft_memset(nb_array, 0, count_nbr(str));
 	n = 0;
 	i = 0;
@@ -127,14 +127,14 @@ int	*get_nbr(char *str)
 		{
 			if (str[n + 1] && ft_isdigit(str[n + 1]))
 			{
-				nb_array[i++] = ft_atoi(&str[n]);
+				nb_array[i++] = (float)ft_atoi(&str[n]);
 				while (str[n + 1] && ft_isdigit(str[n + 1]))
 					n++;
 			}
 		}
 		else if (ft_isdigit(str[n]))
 		{
-			nb_array[i++] = ft_atoi(&str[n]);
+			nb_array[i++] = (float)ft_atoi(&str[n]);
 			while (str[n + 1] && ft_isdigit(str[n + 1]))
 				n++;
 		}
