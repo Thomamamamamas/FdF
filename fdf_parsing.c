@@ -6,7 +6,7 @@
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 14:54:45 by tcasale           #+#    #+#             */
-/*   Updated: 2021/12/13 15:23:38 by tcasale          ###   ########.fr       */
+/*   Updated: 2021/12/18 16:38:31 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ char	**parse_map(char *file, t_parse *parser)
 	int	fd;
 	int	i;
 	int	is_parsing;
-	int	line;
 
 	fd = open(file, O_RDWR);
 	i = 0;
@@ -60,7 +59,7 @@ char	**parse_map(char *file, t_parse *parser)
 				is_parsing = 0;
 			else
 			{
-				parser->x[i] = count_nbr(str);
+				parser->x[i] = count_nbr(str) + 1;
 				height_array[i] = ft_strdup(str);
 			}
 		i++;
