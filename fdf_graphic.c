@@ -6,13 +6,13 @@
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 09:35:58 by tcasale           #+#    #+#             */
-/*   Updated: 2021/12/18 18:26:26 by tcasale          ###   ########.fr       */
+/*   Updated: 2021/12/22 14:58:17 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	draw_grid(t_program *prog, t_vector3 **coord_array, t_parse *parser)
+void	draw_grid(t_program *prog, t_vector2 **coord_array, t_parse *parser)
 {
 	size_t	x;
 	size_t	y;
@@ -23,21 +23,20 @@ void	draw_grid(t_program *prog, t_vector3 **coord_array, t_parse *parser)
 		x = 0;
 		while (x < parser->x[y])
 		{
-			mlx_pixel_put(prog->mlx_ptr, prog->win_ptr, coord_array[y][x].x, coord_array[y][x].y, 0x00FFFFFF);
+			mlx_pixel_put(prog->mlx_ptr, prog->win_ptr, coord_array[y][x].x + prog->marginx, coord_array[y][x].y + prog->marginy, 0x00FFFFFF);
 			x++;
 		}
 		y++;
 	}
 }
 
-void	draw_line_bottom(t_program *prog, t_vector3 coord1, t_vector3 coord2)
+void	draw_line_bottom(t_program *prog, t_vector2 coord1, t_vector2 coord2)
 {
 	float	x;
 	float	y;
 	float	dx;
 	float	dy;
 	float	p;
-	size_t	direction_y;
 
 	dy = coord2.y - coord1.y;
 	dx = coord2.x - coord1.x;
@@ -46,7 +45,7 @@ void	draw_line_bottom(t_program *prog, t_vector3 coord1, t_vector3 coord2)
 	p = 2 * dy - dx;
 	while (x < coord2.x)
 	{
-		mlx_pixel_put(prog->mlx_ptr, prog->win_ptr, x, y, 0x00FFFFFF);
+		mlx_pixel_put(prog->mlx_ptr, prog->win_ptr, x + prog->marginx, y + prog->marginy, 0x00FFFFFF);
 		if (p  >= 0)
 		{
 			y++;
@@ -60,14 +59,13 @@ void	draw_line_bottom(t_program *prog, t_vector3 coord1, t_vector3 coord2)
 	}
 }
 
-void	draw_line_top(t_program *prog, t_vector3 coord1, t_vector3 coord2)
+void	draw_line_top(t_program *prog, t_vector2 coord1, t_vector2 coord2)
 {
 	float	x;
 	float	y;
 	float	dx;
 	float	dy;
 	float	p;
-	size_t	direction_y;
 
 	dy = coord1.y - coord2.y;
 	dx = coord2.x - coord1.x;
@@ -76,7 +74,7 @@ void	draw_line_top(t_program *prog, t_vector3 coord1, t_vector3 coord2)
 	p = 2 * dy - dx;
 	while (x < coord2.x)
 	{
-		mlx_pixel_put(prog->mlx_ptr, prog->win_ptr, x, y, 0x00FFFFFF);
+		mlx_pixel_put(prog->mlx_ptr, prog->win_ptr, x + prog->marginx, y + prog->marginy, 0x00FFFFFF);
 		if (p  >= 0)
 		{
 			y--;
@@ -90,7 +88,7 @@ void	draw_line_top(t_program *prog, t_vector3 coord1, t_vector3 coord2)
 	}
 }
 
-void	connect_points(t_program *prog, t_vector3 **coord_array, t_parse *parser)
+void	connect_points(t_program *prog, t_vector2 **coord_array, t_parse *parser)
 {
 	size_t	x;
 	size_t	y;

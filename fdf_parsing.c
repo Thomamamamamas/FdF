@@ -6,7 +6,7 @@
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 14:54:45 by tcasale           #+#    #+#             */
-/*   Updated: 2021/12/18 16:38:31 by tcasale          ###   ########.fr       */
+/*   Updated: 2021/12/19 14:39:41 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	**parse_map(char *file, t_parse *parser)
 				is_parsing = 0;
 			else
 			{
-				parser->x[i] = count_nbr(str) + 1;
+				parser->x[i] = count_nbr(str);
 				height_array[i] = ft_strdup(str);
 			}
 		i++;

@@ -6,7 +6,7 @@
 #    By: tcasale <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/13 17:32:54 by tcasale           #+#    #+#              #
-#    Updated: 2021/12/14 14:13:11 by tcasale          ###   ########.fr        #
+#    Updated: 2021/12/22 12:25:02 by tcasale          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,15 +30,27 @@ FDFLAGS	= -lmlx -framework OpenGL -framework AppKit
 RM		= rm -f
 
 %.o: %.c
-			${CC} -c ${CFLAGS} -o ${FDFLAGS} $@ $<
+			${CC} ${CFLAGS} -I./libft/libft.a -I./get_next_line/get_next_line.a -Imlx -c  $< -o $@
 
 all:	$(NAME)
 
-$(NAME):	$(OBJS)
+$(NAME):	$(OBJS) ./libft/libft.a ./get_next_line/get_next_line.a
+			$(CC) $(OBJS) $(FDFLAGS) ./libft/libft.a ./get_next_line/get_next_line.a -o $(NAME)
 
-clean:	${RM} ${OBJS}
+./libft/libft.a:
+	$(MAKE) -C ./libft
+
+./get_next_line/get_next_line.a:
+	$(MAKE) -C ./get_next_line
+
+clean:
+		$(MAKE) -C ./libft $@
+		$(MAKE) -C ./get_next_line $@
+		${RM} ${OBJS}
 
 fclean:	clean
+		$(MAKE) -C ./libft $@
+		$(MAKE) -C get_next_line $@
 		${RM} ${NAME}
 
 re:	fclean all
