@@ -6,7 +6,7 @@
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 10:15:57 by tcasale           #+#    #+#             */
-/*   Updated: 2021/12/22 15:51:04 by tcasale          ###   ########.fr       */
+/*   Updated: 2021/12/22 18:04:11 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ t_vector3	**get_cartesian_coord(char **height_array, t_parse *parser)
 
 	y = 0;
 	cart_coord_array = (t_vector3 **)malloc(sizeof(t_vector3 *) * parser->y + 1);
-	printf("cartesien :\n");
 	while (y < parser->y)
 	{
 		x = 0;
@@ -39,7 +38,6 @@ t_vector3	**get_cartesian_coord(char **height_array, t_parse *parser)
 		}
 		y++;
 	}
-	print_vector3_array(cart_coord_array, parser->y, parser->x);
 	return (cart_coord_array);
 }
 
@@ -51,7 +49,6 @@ t_vector2	**cartesian_to_iso(t_vector3 **coord, t_parse *parser)
 
 	y = 0;
 	coord_iso = (t_vector2 **)malloc(sizeof(t_vector2 *) * parser->y + 1);
-	printf("isometrique :\n");
 	while (y < parser->y)
 	{
 		coord_iso[y] = (t_vector2 *)malloc(sizeof(t_vector2) * parser->x[y] + 1);
@@ -64,7 +61,45 @@ t_vector2	**cartesian_to_iso(t_vector3 **coord, t_parse *parser)
 		}
 		y++;
 	}
-	print_vector2_array(coord_iso, parser->y, parser->x);
-	free_vector3_array(coord, parser->y);
 	return (coord_iso);
+}
+
+int		**relief_color(t_program *prog, t_vector3 **coord_cart_array, t_parse *parser)
+{
+	int	**relief_color_array;
+
+	size_t	x;
+	size_t	y;
+
+	x = 0;
+	y = 0;
+	relief_color_array = (int **)malloc(sizeof(int *) * parser->y + 1);
+	printf("higher = %d\n", prog->relief_higher);
+	printf("high = %d\n", prog->relief_high);
+	printf("medium = %d\n", prog->relief_medium);
+	printf("low = %d\n", prog->relief_low);
+	printf("lower = %d\n", prog->relief_lower);
+	while (y < parser->y)
+	{
+		x = 0;
+		relief_color_array[y] = (int *)malloc(sizeof(int) * parser->x[y] + 1);
+		while (x < parser->x[y])
+		{
+			if (coord_cart_array[y][x].z >= prog->relief_higher)
+				relief_color_array[y][x] = COLOR_HIGHER;
+			else if (coord_cart_array[y][x].z >= prog->relief_high)
+				relief_color_array[y][x] = COLOR_HIGH;
+			else if (coord_cart_array[y][x].z >= prog->relief_medium)
+				relief_color_array[y][x] = COLOR_MEDIUM;
+			else if (coord_cart_array[y][x].z >= prog->relief_low)
+				relief_color_array[y][x] = COLOR_LOW;
+			else if (coord_cart_array[y][x].z >= prog->relief_lower)
+				relief_color_array[y][x] = COLOR_LOWER;
+			else
+				relief_color_array[y][x] = 0x00FFFFFF;
+			x++;
+		}
+		y++;
+	}
+	return (relief_color_array);
 }

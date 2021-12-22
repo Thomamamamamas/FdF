@@ -6,7 +6,7 @@
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 11:37:15 by tcasale           #+#    #+#             */
-/*   Updated: 2021/12/22 15:23:13 by tcasale          ###   ########.fr       */
+/*   Updated: 2021/12/22 18:04:14 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,14 @@
 # define MARGINY		20
 # define MARGINX		20
 
+# define COLOR_HIGHER	0x00C800FC
+# define COLOR_HIGH		0x00FA3200
+# define COLOR_MEDIUM_H	0x00FFFF00
+# define COLOR_MEDIUM	0x00FFFFFF
+# define COLOR_MEDIUM_L	0x0099CCFF
+# define COLOR_LOW		0x0000C8FA
+# define COLOR_LOWER	0x000014FA
+
 #include "minilibx/mlx.h"
 #include "libft/libft.h"
 #include "get_next_line/get_next_line.h"
@@ -40,9 +48,13 @@ typedef struct	s_program
 	void	*win_ptr;
 	int		win_height;
 	int		win_width;
-	int		win_midx;
 	int		marginx;
 	int		marginy;
+	int		relief_higher;
+	int		relief_high;
+	int		relief_medium;
+	int		relief_low;
+	int		relief_lower;
 }				t_program;
 
 typedef struct	s_parse
@@ -74,13 +86,15 @@ float		*get_nbr(char *str);
 //isometric/cartesian
 t_vector3	**get_cartesian_coord(char **height_array, t_parse *parser);
 t_vector2	**cartesian_to_iso(t_vector3 **cord, t_parse *parser);
+int			**relief_color(t_program *color, t_vector3 **coord_cart_array, t_parse *parser);
 
 //utils
 void		free_vector3_array(t_vector3 **array, size_t line);
 void		free_vector2_array(t_vector2 **array, size_t line);
+void		set_relief_dimension(t_program *prog, t_vector3 **coord_array, t_parse *parser);
 
 //drawing
-void		draw_grid(t_program *prog, t_vector2 **coord_array, t_parse *parser);
+void		draw_grid(t_program *prog, t_vector2 **coord_array, int **relief_color_array, t_parse *parser);
 void		draw_line_bottom(t_program *prog, t_vector2 coord1, t_vector2 coord2);
 void		draw_line_top(t_program *prog, t_vector2 coord1, t_vector2 coord2);
 void		connect_points(t_program *prog, t_vector2 **coord_array, t_parse *parser);

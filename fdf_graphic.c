@@ -6,16 +6,17 @@
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 09:35:58 by tcasale           #+#    #+#             */
-/*   Updated: 2021/12/22 14:58:17 by tcasale          ###   ########.fr       */
+/*   Updated: 2021/12/22 18:04:17 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	draw_grid(t_program *prog, t_vector2 **coord_array, t_parse *parser)
+void	draw_grid(t_program *prog, t_vector2 **coord_array, int **relief_color_array, t_parse *parser)
 {
 	size_t	x;
 	size_t	y;
+	int		color;
 
 	y = 0;
 	while (y < parser->y)
@@ -23,7 +24,8 @@ void	draw_grid(t_program *prog, t_vector2 **coord_array, t_parse *parser)
 		x = 0;
 		while (x < parser->x[y])
 		{
-			mlx_pixel_put(prog->mlx_ptr, prog->win_ptr, coord_array[y][x].x + prog->marginx, coord_array[y][x].y + prog->marginy, 0x00FFFFFF);
+			color = relief_color_array[y][x];
+			mlx_pixel_put(prog->mlx_ptr, prog->win_ptr, coord_array[y][x].x + prog->marginx, coord_array[y][x].y + prog->marginy, color);
 			x++;
 		}
 		y++;
