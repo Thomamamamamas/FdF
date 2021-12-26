@@ -6,7 +6,7 @@
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 16:19:48 by tcasale           #+#    #+#             */
-/*   Updated: 2021/12/22 17:58:59 by tcasale          ###   ########.fr       */
+/*   Updated: 2021/12/26 16:46:06 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	free_vector2_array(t_vector2 **array, size_t line)
 	free(array);
 }
 
-void	set_relief_dimension(t_program *prog, t_vector3 **coord_array, t_parse *parser)
+void	set_relief_dimension(t_program *prog, t_vector3 **coords, t_parse *parser)
 {
 	size_t	x;
 	size_t	y;
@@ -46,16 +46,20 @@ void	set_relief_dimension(t_program *prog, t_vector3 **coord_array, t_parse *par
 		printf("lower : %d\n", prog->relief_lower);
 		while (x < parser->x[y])
 		{
-			if (coord_array[y][x].z > prog->relief_higher)
-				prog->relief_higher = coord_array[y][x].z;
-			else if (coord_array[y][x].z < prog->relief_higher && coord_array[y][x].z > prog->relief_high)
-				prog->relief_high = coord_array[y][x].z;
-			else if (coord_array[y][x].z < prog->relief_high && coord_array[y][x].z > prog->relief_medium)
-				prog->relief_medium = coord_array[y][x].z;
-			else if (coord_array[y][x].z < prog->relief_lower && coord_array[y][x].z > prog->relief_low)
-				prog->relief_low = coord_array[y][x].z;
-			else if (coord_array[y][x].z < prog->relief_lower)
-				prog->relief_lower = coord_array[y][x].z;
+			if (coords[y][x].z > prog->relief_higher)
+				prog->relief_higher = coords[y][x].z;
+			else if (coords[y][x].z < prog->relief_higher && coords[y][x].z > prog->relief_high)
+				prog->relief_high = coords[y][x].z;
+			else if (coords[y][x].z < prog->relief_high && coords[y][x].z > prog->relief_medium_high)
+				prog->relief_medium_high = coords[y][x].z;
+			else if (coords[y][x].z < prog->relief_high && coords[y][x].z > prog->relief_medium)
+				prog->relief_medium = coords[y][x].z;
+			else if (coords[y][x].z < prog->relief_medium && coords[y][x].z > prog->relief_medium_low)
+				prog->relief_medium_low = coords[y][x].z;
+			else if (coords[y][x].z < prog->relief_lower && coords[y][x].z > prog->relief_low)
+				prog->relief_low = coords[y][x].z;
+			else if (coords[y][x].z < prog->relief_lower)
+				prog->relief_lower = coords[y][x].z;
 			x++;
 		}
 		y++;

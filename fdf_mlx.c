@@ -6,7 +6,7 @@
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 17:16:30 by tcasale           #+#    #+#             */
-/*   Updated: 2021/12/22 18:04:16 by tcasale          ###   ########.fr       */
+/*   Updated: 2021/12/26 18:18:53 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ t_program	init_window(t_parse *parser)
 	prog.win_ptr = mlx_new_window(prog.mlx_ptr, prog.win_width, prog.win_height, "FdF");
 	prog.relief_higher = 10;
 	prog.relief_high = 5;
+	prog.relief_medium_high = 2;
 	prog.relief_medium = 0;
+	prog.relief_medium_low = -2;
 	prog.relief_low = -5;
 	prog.relief_lower = -10;
 	return(prog);

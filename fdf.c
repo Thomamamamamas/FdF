@@ -6,7 +6,7 @@
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 11:18:12 by tcasale           #+#    #+#             */
-/*   Updated: 2021/12/22 17:58:26 by tcasale          ###   ########.fr       */
+/*   Updated: 2021/12/26 18:20:21 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "fdf.h"
@@ -17,25 +17,25 @@ int	main(int argc, char **argv)
 {
 	t_program	prog;
 	t_parse		parser;
-	char		**height_array;
-	t_vector3	**coord_cart_array;
-	int			**relief_color_array;
-	t_vector2	**coord_array;
+	char		**map;
+	t_vector3	**coord_carts;
+	int			**relief_colors;
+	t_vector2	**coords;
 
 	if (argc < 2)
 		return (-1);
-	height_array = parse_map(argv[1], &parser);
-	coord_cart_array = get_cartesian_coord(height_array, &parser);
-	coord_array = cartesian_to_iso(coord_cart_array, &parser);
+	map = parse_map(argv[1], &parser);
+	coord_carts = get_cartesian_coord(map, &parser);
+	coords = cartesian_to_iso(coord_carts, &parser);
 	prog = init_window(&parser);
-	set_relief_dimension(&prog, coord_cart_array, &parser);
-	relief_color_array = relief_color(&prog, coord_cart_array, &parser);
-	draw_grid(&prog, coord_array, relief_color_array, &parser);
-	//connect_points(&prog, coord_array, relief_color_array, &parser);
+	set_relief_dimension(&prog, coord_carts, &parser);
+	relief_colors = get_relief_color(&prog, coord_carts, &parser);
+	draw_grid(&prog, coords, relief_colors, &parser);
+	connect_points(&prog, coords, relief_colors, &parser);
 	//if pressed a key
 	mlx_hook(prog.win_ptr, KEY_PRESSED, 0, &key_pressed, &prog);
 	//if closed window
 	mlx_hook(prog.win_ptr, WINDOW_CLOSED, 0, &close_window, &prog);
 	mlx_loop(prog.mlx_ptr);
-	free(height_array);
+	free(map);
 }

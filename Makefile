@@ -6,7 +6,7 @@
 #    By: tcasale <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/13 17:32:54 by tcasale           #+#    #+#              #
-#    Updated: 2021/12/22 12:25:02 by tcasale          ###   ########.fr        #
+#    Updated: 2021/12/26 17:54:56 by tcasale          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ SRCS	= fdf.c \
 	fdf_isometric.c \
 	fdf_mlx.c \
 	fdf_graphic.c \
+	fdf_color.c \
 	fdf_parsing.c \
 	fdf_debug_utils.c
 

@@ -6,7 +6,7 @@
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 11:37:15 by tcasale           #+#    #+#             */
-/*   Updated: 2021/12/22 18:04:14 by tcasale          ###   ########.fr       */
+/*   Updated: 2021/12/26 17:56:34 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,22 @@
 # define MARGINY		20
 # define MARGINX		20
 
-# define COLOR_HIGHER	0x00C800FC
-# define COLOR_HIGH		0x00FA3200
-# define COLOR_MEDIUM_H	0x00FFFF00
-# define COLOR_MEDIUM	0x00FFFFFF
-# define COLOR_MEDIUM_L	0x0099CCFF
-# define COLOR_LOW		0x0000C8FA
-# define COLOR_LOWER	0x000014FA
+# define RAD30 0.523599
+# define RAD120 2.0944
+
+# define COLOR_MAX6	0x00770191	//VIOLET
+# define COLOR_MAX5	0x00FF0101	//ROUGE
+# define COLOR_MAX4	0x00FF5523	//ROUGE-ORANGE
+# define COLOR_MAX3	0x00FF9623	//ORANGE
+# define COLOR_MAX2	0x00FFC323	//JAUNE ORANGE
+# define COLOR_MAX1	0x00FFFF23	//JAUNE
+# define COLOR_0	0x00FFFFFF	//BLANC
+# define COLOR_MIN1	0x0096FF23	//JAUNE VERT
+# define COLOR_MIN2	0x0001AF01	//VERT
+# define COLOR_MIN3	0x00019687	//VERT BLEU
+# define COLOR_MIN4	0x000164FF	//BLEU
+# define COLOR_MIN5	0x004B01FF	//BLEU VIOLET
+# define COLOR_MIN6	0x00A001FF	//VIOLET
 
 #include "minilibx/mlx.h"
 #include "libft/libft.h"
@@ -52,7 +61,9 @@ typedef struct	s_program
 	int		marginy;
 	int		relief_higher;
 	int		relief_high;
+	int		relief_medium_high;
 	int		relief_medium;
+	int		relief_medium_low;
 	int		relief_low;
 	int		relief_lower;
 }				t_program;
@@ -84,20 +95,25 @@ size_t		count_nbr(char *str);
 float		*get_nbr(char *str);
 
 //isometric/cartesian
-t_vector3	**get_cartesian_coord(char **height_array, t_parse *parser);
-t_vector2	**cartesian_to_iso(t_vector3 **cord, t_parse *parser);
-int			**relief_color(t_program *color, t_vector3 **coord_cart_array, t_parse *parser);
+t_vector3	**get_cartesian_coord(char **map, t_parse *parser);
+t_vector2	**cartesian_to_iso(t_vector3 **coords, t_parse *parser);
+int			**get_relief_color(t_program *color, t_vector3 **coord_carts, t_parse *parser);
 
 //utils
 void		free_vector3_array(t_vector3 **array, size_t line);
 void		free_vector2_array(t_vector2 **array, size_t line);
-void		set_relief_dimension(t_program *prog, t_vector3 **coord_array, t_parse *parser);
+void		set_relief_dimension(t_program *prog, t_vector3 **coords, t_parse *parser);
 
 //drawing
-void		draw_grid(t_program *prog, t_vector2 **coord_array, int **relief_color_array, t_parse *parser);
-void		draw_line_bottom(t_program *prog, t_vector2 coord1, t_vector2 coord2);
-void		draw_line_top(t_program *prog, t_vector2 coord1, t_vector2 coord2);
-void		connect_points(t_program *prog, t_vector2 **coord_array, t_parse *parser);
+void		draw_grid(t_program *prog, t_vector2 **coords, int **relief_colors, t_parse *parser);
+void		draw_line_bottom(t_program *prog, t_vector2 coord1, t_vector2 coord2, int color1, int color2);
+void		draw_line_top(t_program *prog, t_vector2 coord1, t_vector2 coord2, int color1, int color2);
+void		connect_points(t_program *prog, t_vector2 **coords, int **relief_colors, t_parse *parser);
+
+//color
+int			choose_color(int color1, int color2, int direction);
+int			get_color_id(int color);
+int			swap_color(int color, int direction);
 
 //minilibx interaction
 t_program	init_window(t_parse *parser);

@@ -6,13 +6,13 @@
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 09:35:58 by tcasale           #+#    #+#             */
-/*   Updated: 2021/12/22 18:04:17 by tcasale          ###   ########.fr       */
+/*   Updated: 2021/12/26 18:23:48 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	draw_grid(t_program *prog, t_vector2 **coord_array, int **relief_color_array, t_parse *parser)
+void	draw_grid(t_program *prog, t_vector2 **coords, int **relief_colors, t_parse *parser)
 {
 	size_t	x;
 	size_t	y;
@@ -24,15 +24,15 @@ void	draw_grid(t_program *prog, t_vector2 **coord_array, int **relief_color_arra
 		x = 0;
 		while (x < parser->x[y])
 		{
-			color = relief_color_array[y][x];
-			mlx_pixel_put(prog->mlx_ptr, prog->win_ptr, coord_array[y][x].x + prog->marginx, coord_array[y][x].y + prog->marginy, color);
+			color = relief_colors[y][x];
+			mlx_pixel_put(prog->mlx_ptr, prog->win_ptr, coords[y][x].x + prog->marginx, coords[y][x].y + prog->marginy, color);
 			x++;
 		}
 		y++;
 	}
 }
 
-void	draw_line_bottom(t_program *prog, t_vector2 coord1, t_vector2 coord2)
+void	draw_line_bottom(t_program *prog, t_vector2 coord1, t_vector2 coord2, int color1, int color2)
 {
 	float	x;
 	float	y;
@@ -47,7 +47,7 @@ void	draw_line_bottom(t_program *prog, t_vector2 coord1, t_vector2 coord2)
 	p = 2 * dy - dx;
 	while (x < coord2.x)
 	{
-		mlx_pixel_put(prog->mlx_ptr, prog->win_ptr, x + prog->marginx, y + prog->marginy, 0x00FFFFFF);
+		mlx_pixel_put(prog->mlx_ptr, prog->win_ptr, x + prog->marginx, y + prog->marginy, choose_color(color1, color2, 0));
 		if (p  >= 0)
 		{
 			y++;
@@ -61,7 +61,7 @@ void	draw_line_bottom(t_program *prog, t_vector2 coord1, t_vector2 coord2)
 	}
 }
 
-void	draw_line_top(t_program *prog, t_vector2 coord1, t_vector2 coord2)
+void	draw_line_top(t_program *prog, t_vector2 coord1, t_vector2 coord2, int color1, int color2)
 {
 	float	x;
 	float	y;
@@ -76,7 +76,7 @@ void	draw_line_top(t_program *prog, t_vector2 coord1, t_vector2 coord2)
 	p = 2 * dy - dx;
 	while (x < coord2.x)
 	{
-		mlx_pixel_put(prog->mlx_ptr, prog->win_ptr, x + prog->marginx, y + prog->marginy, 0x00FFFFFF);
+		mlx_pixel_put(prog->mlx_ptr, prog->win_ptr, x + prog->marginx, y + prog->marginy, choose_color(color1, color2, 1));
 		if (p  >= 0)
 		{
 			y--;
@@ -90,7 +90,7 @@ void	draw_line_top(t_program *prog, t_vector2 coord1, t_vector2 coord2)
 	}
 }
 
-void	connect_points(t_program *prog, t_vector2 **coord_array, t_parse *parser)
+void	connect_points(t_program *prog, t_vector2 **coords, int **relief_colors, t_parse *parser)
 {
 	size_t	x;
 	size_t	y;
@@ -103,17 +103,17 @@ void	connect_points(t_program *prog, t_vector2 **coord_array, t_parse *parser)
 		{
 			if (x + 1 < parser->x[y])
 			{
-				if (coord_array[y][x].y < coord_array[y][x + 1].y)
-					draw_line_bottom(prog, coord_array[y][x], coord_array[y][x + 1]);
+				if (coords[y][x].y < coords[y][x + 1].y)
+					draw_line_bottom(prog, coords[y][x], coords[y][x + 1], relief_colors[y][x], relief_colors[y][x + 1]);
 				else
-					draw_line_top(prog, coord_array[y][x], coord_array[y][x + 1]);
+					draw_line_top(prog, coords[y][x], coords[y][x + 1], relief_colors[y][x], relief_colors[y][x + 1]);
 			}
 			if (y > 0)
 			{
-				if (coord_array[y][x].y < coord_array[y - 1][x].y)
-					draw_line_bottom(prog, coord_array[y][x], coord_array[y - 1][x]);
+				if (coords[y][x].y < coords[y - 1][x].y)
+					draw_line_bottom(prog, coords[y][x], coords[y - 1][x], relief_colors[y][x], relief_colors[y - 1][x]);
 				else
-					draw_line_top(prog, coord_array[y][x], coord_array[y - 1][x]);
+					draw_line_top(prog, coords[y][x], coords[y - 1][x], relief_colors[y][x], relief_colors[y - 1][x]);
 			}
 			x++;
 		}
