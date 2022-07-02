@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf_utils.c                                        :+:      :+:    :+:   */
+/*   fdf_parsing.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 14:54:45 by tcasale           #+#    #+#             */
-/*   Updated: 2021/12/19 14:39:41 by tcasale          ###   ########.fr       */
+/*   Updated: 2022/07/03 00:18:47 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,8 @@ size_t	number_of_line(char *file)
 	int		fd;
 	size_t	line;
 	char	caracter;
-	char	last_caracter;
 
 	fd = open(file, O_RDWR);
-	last_caracter = '\0';
 	if (fd < 0)
 		return (0);
 	line = 0;
@@ -30,7 +28,6 @@ size_t	number_of_line(char *file)
 	{
 		if (caracter == '\n')
 			line++;
-		last_caracter = caracter;
 	}
 	close(fd);
 	return (line);
@@ -73,7 +70,7 @@ size_t	len_2d_char_array(char **array)
 	int	n;
 
 	n = 0;
-	while (array[n] != '\0')
+	while (array[n] != NULL)
 		n++;
 	return (n);
 }
