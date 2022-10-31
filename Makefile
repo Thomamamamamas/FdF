@@ -20,11 +20,11 @@ HEADER	= includes
 
 CC		= gcc
 CFLAGS	= -Wall -Wextra -Werror
-FDFLAGS	= srcs/minilibx/libmlx.a -framework OpenGL -framework AppKit
+FDFLAGS	= srcs/mlx/libmlx.a -framework OpenGL -framework AppKit
 RM		= rm -f
 
 %.o: %.c
-			${CC} ${CFLAGS} -I./srcs/libft/libft.a -I./srcs/get_next_line/get_next_line.a -I./srcs/minilibx/libmlx.a -c  $< -o $@
+			${CC} ${CFLAGS} -I./srcs/libft/libft.a -I./srcs/get_next_line/get_next_line.a -I./srcs/mlx/libmlx.a -c  $< -o $@
 
 all:	$(NAME)
 

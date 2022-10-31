@@ -33,7 +33,7 @@
 
 # define WHITE			0x0FFFFFF
 
-#include "../srcs/minilibx/mlx.h"
+#include "../srcs/mlx/mlx.h"
 #include "../srcs/libft/libft.h"
 #include "../srcs/get_next_line/get_next_line.h"
 #include <fcntl.h>
