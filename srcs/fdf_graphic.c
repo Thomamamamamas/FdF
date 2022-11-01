@@ -12,18 +12,19 @@
 
 #include "../headers/fdf.h"
 
-void	draw_grid(t_fdf *fdf, t_vector2 **coords)
+void	draw_grid(t_fdf *fdf)
 {
-	size_t	x;
-	size_t	y;
+	int	x;
+	int	y;
 
 	y = 0;
-	while (y < fdf->line)
+	while (y < fdf->matrix_line)
 	{
 		x = 0;
-		while (x < fdf->col[y])
+		ft_putstr_fd("\n", 2);
+		while (x < fdf->matrix_col[y])
 		{
-			mlx_pixel_put(fdf->prog.mlx_ptr, fdf->prog.win_ptr, coords[y][x].x + fdf->prog.marginx, coords[y][x].y + fdf->prog.marginy, WHITE);
+			mlx_pixel_put(fdf->prog.mlx_ptr, fdf->prog.win_ptr, fdf->isometric[y][x].x * fdf->prog.spacex + 10, fdf->isometric[y][x].y * fdf->prog.spacey + 10, WHITE);
 			x++;
 		}
 		y++;
@@ -88,30 +89,30 @@ void	draw_line_top(t_fdf *fdf, t_vector2 coord1, t_vector2 coord2)
 	}
 }
 
-void	connect_points(t_fdf *fdf, t_vector2 **coords)
+void	connect_points(t_fdf *fdf)
 {
-	size_t	x;
-	size_t	y;
+	int	x;
+	int	y;
 
 	y = 0;
-	while (y < fdf->line)
+	while (y < fdf->matrix_line)
 	{
 		x = 0;
-		while (x < fdf->col[y])
+		while (x < fdf->matrix_col[y])
 		{
-			if (x + 1 < fdf->col[y])
+			if (x + 1 < fdf->matrix_col[y])
 			{
-				if (coords[y][x].y < coords[y][x + 1].y)
-					draw_line_bottom(fdf, coords[y][x], coords[y][x + 1]);
+				if (fdf->isometric[y][x].y < fdf->isometric[y][x + 1].y)
+					draw_line_bottom(fdf, fdf->isometric[x][y], fdf->isometric[y][x + 1]);
 				else
-					draw_line_top(fdf, coords[y][x], coords[y][x + 1]);
+					draw_line_top(fdf, fdf->isometric[y][x], fdf->isometric[y][x + 1]);
 			}
 			if (y > 0)
 			{
-				if (coords[y][x].y < coords[y - 1][x].y)
-					draw_line_bottom(fdf, coords[y][x], coords[y - 1][x]);
+				if (fdf->isometric[y][x].y < fdf->isometric[y - 1][x].y)
+					draw_line_bottom(fdf, fdf->isometric[y][x], fdf->isometric[y - 1][x]);
 				else
-					draw_line_top(fdf, coords[y][x], coords[y - 1][x]);
+					draw_line_top(fdf, fdf->isometric[y][x], fdf->isometric[y - 1][x]);
 			}
 			x++;
 		}

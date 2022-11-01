@@ -47,6 +47,10 @@ typedef struct	s_program
 	int		win_width;
 	int		marginx;
 	int		marginy;
+	int		gridx;
+	int		gridy;
+	int		spacex;
+	int		spacey;
 	int		relief_higher;
 	int		relief_high;
 	int		relief_medium_high;
@@ -54,6 +58,7 @@ typedef struct	s_program
 	int		relief_medium_low;
 	int		relief_low;
 	int		relief_lower;
+	int		error_code;
 }				t_program;
 
 typedef struct	s_vector2
@@ -71,43 +76,38 @@ typedef struct	s_fdf
 	t_program	prog;
 }				t_fdf;
 
-
 //parsing
 int			number_of_line(char *file);
 void		parse_map(t_fdf *fdf, char *file);
 size_t		len_2d_char_array(char **array);
 void		parse_actual_line(t_fdf *fdf, char *str, int i);
-
 //isometric/cartesian
 void		get_isometric_coords(t_fdf *fdf);
 int			**get_y_rotation_matrix(t_fdf *fdf, int n, int m);
 int			**get_x_rotation_matrix(int n, int m);
-
 //matrix
 int			**malloc_matrix(int line, int col);
 int			**multiply_matrix_3x3(int **m1, int **m2, int col2);
 int			**get_first_y_rotation_matrix(void );
 int			**get_second_y_rotation_matrix(void );
 int			**get_first_x_rotation_matrix(void );
-
 //utils
 void		end_fdf(t_fdf *fdf);
 t_vector2	**malloc_2d_t_vector2(int line, int *col);
 void		free_int_2d_array(int	**array, int line);
 void		free_vector2_array(t_vector2 **array, size_t line);
 void		set_relief_dimension(t_fdf *fdf);
-
 //drawing
-void		draw_grid(t_fdf *fdf, t_vector2 **coords);
+void		draw_grid(t_fdf *fdf);
 void		draw_line_bottom(t_fdf *fdf, t_vector2 coord1, t_vector2 coord2);
 void		draw_line_top(t_fdf *fdf, t_vector2 coord1, t_vector2 coord2);
-void		connect_points(t_fdf *fdf, t_vector2 **coords);
-
+void		connect_points(t_fdf *fdf);
+//error
+void		error_gestion(t_fdf *fdf);
 //minilibx interaction
-t_program	init_window();
+void		init_window(t_fdf *fdf);
 int			close_window(t_program *prog);
 int			key_pressed(t_program *prog, int keycode);
-
 //debug
 void		print_vector2(t_vector2 vector);
 void		print_vector2_array(t_vector2 **array, size_t line, size_t *column);

@@ -40,16 +40,22 @@ void	parse_map(t_fdf *fdf, char *file)
 	int	i;
 
 	i = 0;
+	fdf->prog.error_code = 0;
 	fd = open(file, O_RDWR);
+	if (fd < 0)
+		fdf->prog.error_code = 1;
 	fdf->matrix_line = number_of_line(file);
 	fdf->cartesian = (int **)malloc(sizeof(int *) * fdf->matrix_line + 1);
 	fdf->matrix_col = (int *)malloc(sizeof(int) * fdf->matrix_line + 1);
 	while (1)
 	{
 		str = get_next_line(fd);
-		if (!str)
+		if (!str || fdf->prog.error_code != 0)
 		{
+			if (str)
+				free(str);
 			close(fd);
+			fdf->matrix_line = i;
 			return ;
 		}
 		else
@@ -73,20 +79,27 @@ void	parse_actual_line(t_fdf *fdf, char *str, int i)
 {
 	char	**line;
 	int		j;
+	int		n;
 
 	line = ft_split(str, ' ');
 	j = 0;
-	if (line != NULL)
+	while (line[j] != NULL)
 	{
-		while (line[j] != NULL)
-			j++;
-		fdf->cartesian[i] = (int *)malloc(sizeof(int) * j + 1);
-		fdf->matrix_col[i] = j;
-		j = 0;
-		while (line[j] != NULL)
+		n = 0;
+		while (line[j][n])
 		{
-			fdf->cartesian[i][j] = ft_atoi(line[j]);
-			j++;
+			if (!ft_isdigit(line[j][n]) && line[j][n] != '\n' && line[j][n] != ' ')
+				fdf->prog.error_code = 2;
+			n++;
 		}
+		j++;
+	}
+	fdf->cartesian[i] = (int *)malloc(sizeof(int) * j + 1);
+	fdf->matrix_col[i] = j;
+	j = 0;
+	while (line[j] != NULL && fdf->prog.error_code == 0)
+	{
+		fdf->cartesian[i][j] = ft_atoi(line[j]);
+		j++;
 	}
 }

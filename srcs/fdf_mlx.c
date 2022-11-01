@@ -12,24 +12,26 @@
 #include "../headers/fdf.h"
 #include <stdio.h>
 
-t_program	init_window()
+void	init_window(t_fdf *fdf)
 {
-	t_program	prog;
 
-	prog.mlx_ptr = mlx_init();
-	prog.win_height = (GRID_SIZEY * 1.75) * MARGINY;
-	prog.win_width = (GRID_SIZEX * 1.75) * MARGINX;
-	prog.marginx = GRID_SIZEX * 2;
-	prog.marginy = MARGINY ;
-	prog.win_ptr = mlx_new_window(prog.mlx_ptr, prog.win_width, prog.win_height, "FdF");
-	prog.relief_higher = 10;
-	prog.relief_high = 5;
-	prog.relief_medium_high = 2;
-	prog.relief_medium = 0;
-	prog.relief_medium_low = -2;
-	prog.relief_low = -5;
-	prog.relief_lower = -10;
-	return(prog);
+	fdf->prog.mlx_ptr = mlx_init();
+	fdf->prog.marginy = 10;
+	fdf->prog.marginx = 10;
+	fdf->prog.gridx = 10;
+	fdf->prog.gridy = 10;
+	fdf->prog.spacex = 10;
+	fdf->prog.spacey = 10;
+	fdf->prog.win_height = 400;
+	fdf->prog.win_width =  400;
+	fdf->prog.win_ptr = mlx_new_window(fdf->prog.mlx_ptr, fdf->prog.win_width, fdf->prog.win_height, "FdF");
+	fdf->prog.relief_higher = 10;
+	fdf->prog.relief_high = 5;
+	fdf->prog.relief_medium_high = 2;
+	fdf->prog.relief_medium = 0;
+	fdf->prog.relief_medium_low = -2;
+	fdf->prog.relief_low = -5;
+	fdf->prog.relief_lower = -10;
 }
 
 int	close_window(t_program *prog)
