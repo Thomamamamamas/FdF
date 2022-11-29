@@ -19,19 +19,18 @@ int	main(int argc, char **argv)
 
 	if (argc < 2)
 		return (-1);
-	parse_map(&fdf, argv[1]);
+	fdf = init_fdf(argv[1]);
+	printf("error code = %d\n", fdf.prog.error_code);
 	if (fdf.prog.error_code == 0)
 	{
-		get_isometric_coords(&fdf);
 		init_window(&fdf);
-		set_relief_dimension(&fdf);
 		draw_grid(&fdf);
 		connect_points(&fdf);
 		//if pressed a key
-		mlx_hook(fdf.prog.win_ptr, KEY_PRESSED, 0, &key_pressed, &fdf.prog);
+		mlx_hook(fdf.prog.win, KEY_PRESSED, 0, &key_pressed, &fdf.prog);
 		//if closed window
-		mlx_hook(fdf.prog.win_ptr, WINDOW_CLOSED, 0, &close_window, &fdf.prog);
-		mlx_loop(fdf.prog.mlx_ptr);
+		mlx_hook(fdf.prog.win, WINDOW_CLOSED, 0, &close_window, &fdf.prog);
+		mlx_loop(fdf.prog.mlx);
 	}
 	if (fdf.prog.error_code != 0)
 		error_gestion(&fdf);
