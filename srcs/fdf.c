@@ -27,12 +27,9 @@ int	main(int argc, char **argv)
 		draw_grid(&fdf);
 		connect_points(&fdf);
 		//if pressed a key
-		mlx_hook(fdf.prog.win, KEY_PRESSED, 0, &key_pressed, &fdf.prog);
-		//if closed window
-		mlx_hook(fdf.prog.win, WINDOW_CLOSED, 0, &close_window, &fdf.prog);
+		mlx_hook(fdf.prog.win, KEY_PRESSED, 0, &key_pressed, &fdf);
 		mlx_loop(fdf.prog.mlx);
 	}
 	if (fdf.prog.error_code != 0)
 		error_gestion(&fdf);
-	end_fdf(&fdf);
 }

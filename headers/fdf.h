@@ -19,14 +19,21 @@
 # define KEY_PRESSED	2
 # define KEY_RELEASED	3
 # define MOUSE_PRESSED	4
-# define WINDOW_CLOSED	17
+# define WINDOW_CLOSED	53
 
 # define KEY_CODE_ESC	53
+# define KEY_CODE_C		8
 
 # define WHITE			0x0FFFFFF
+# define BLUE_MARINE	0x02803FC
+# define BLUE_CLEAR		0x005BCFF
+# define BEIGE			0x0E9E199
+# define GREEN			0x000FF0D
+# define YELLOW			0x0CBFC05
+# define RED			0x0E82507
+# define PURPLE			0x0EA05FA
 
-# define GRIDX			50
-# define GRIDY			50
+# define GRID			100
 # define MARGINX		300
 # define MARGINY		300
 
@@ -48,17 +55,24 @@ typedef struct	s_program
 	int		error_code;
 	float	marginx;
 	float	marginy;
-	int		gridx;
-	int		gridy;
+	int		grid;
 	float	max_height;
 	float	max_width;
 	float	max_size;
 }				t_program;
 
+typedef struct	s_rgb
+{
+	int	r;
+	int	g;
+	int	b;
+}				t_rgb;
+
 typedef struct	s_vector2
 {
 	float	x;
 	float	y;
+	t_rgb	color;
 }				t_vector2;
 
 typedef struct	s_vector3
@@ -66,7 +80,17 @@ typedef struct	s_vector3
 	float	x;
 	float	y;
 	float	z;
+	t_rgb	color;
 }				t_vector3;
+
+typedef struct	s_colorset
+{
+	int		color_white;
+	int		color1;
+	int		color2;
+	int		color3;
+	int		color4;
+}				t_colorset;
 
 typedef struct	s_fdf
 {
@@ -74,10 +98,15 @@ typedef struct	s_fdf
 	t_vector2	**matrix;
 	int			matrix_line;
 	int			*matrix_col;
-	float		high;
-	float		low;
+	float		top;
+	float		bottom;
 	float		left;
 	float		right;
+	float		smallest;
+	float		medium;
+	float		largest;
+	t_colorset	colorset;
+	int			colorset_id;
 	t_program	prog;
 }				t_fdf;
 
@@ -86,38 +115,49 @@ int			number_of_line(char *file);
 void		parse_map(t_fdf *fdf, int fd);
 void		allocate_matrix(t_fdf *fdf, char *file);
 void		allocate_actual_line(t_fdf *fdf, char *str, int y);
-
+void		parse_windows_info(t_fdf *fdf);
 //parsing2
 void		parse_actual_line(t_fdf *fdf, char *str, int y);
 void		parse_actual_coord(t_fdf *fdf, char *str, int x, int y);
 void		actual_coord_to_iso(t_fdf *fdf, int x, int y, int z);
 void		convert_coords(t_fdf *fdf);
-void		parse_windows_info(t_fdf *fdf);
-
+int			is_hexadecimal_nb(char *str);
 //utils
 t_fdf		init_fdf(char *file);
-void		end_fdf(t_fdf *fdf);
-void		free_vector2_array(t_vector2 **array, size_t line);
 void		get_matrix_limits(t_fdf *fdf);
-//drawing
+void		get_matrix_relief(t_fdf *fdf);
+//graphic
 void		draw_grid(t_fdf *fdf);
 void		bresenham_line(t_fdf *fdf, t_vector2 coord1, t_vector2 coord2);
+void		bresenham_base_case(t_fdf *fdf, t_vector2 v1, t_vector2 v2, t_vector2 ev);
+void		bresenham_inverse_case(t_fdf *fdf, t_vector2 v1, t_vector2 v2, t_vector2 ev);
 void		connect_points(t_fdf *fdf);
+//graphic_utils
+int			bresenham_increment_v1(int coord1, int coord2);
+t_rgb		get_point_color(t_fdf *fdf, float z);
+int			get_line_color(t_rgb c1, t_rgb c2, float value);
+//color
+void		get_matrix_colors(t_fdf *fdf);
+t_colorset	assign_colorset(int id);
+t_rgb		hex_to_rgb(int value);
+int			rgb_to_hex(t_rgb rgb);
 //error
 void		error_gestion(t_fdf *fdf);
 // window management
 void		init_window(t_fdf *fdf);
-void		get_all_windows_value(t_fdf *fdf);
-void		update_window_value(t_fdf *fdf);
-int			check_if_window_is_valid(t_fdf *fdf);
-int			check_visible_point(t_fdf *fdf, int n);
-// window management2
-void		ajust_window_size(t_fdf *fdf);
+void		get_window_size(t_fdf *fdf);
+void		get_margins(t_fdf *fdf);
+int			try_adapt_grid_size(t_fdf *fdf);
 //minilibx fdf
-int			close_window(t_program *prog);
-int			key_pressed(t_program *prog, int keycode);
+int			close_window(t_fdf *fdf);
+void		change_colorset(t_fdf *fdf);
+int			key_pressed(int keycode, t_fdf *fdf);
 //debug
 void		print_vector2(t_vector2 vector);
-void		print_vector2_array(t_vector2 **array, size_t line, size_t *column);
+void		print_vector3(t_vector3 vector);
+void		print_rgb(t_rgb color);
+void		print_matrix(t_fdf *fdf);
+void		print_coords(t_fdf *fdf);
+void		print_window_info(t_fdf *fdf);
 
 #endif

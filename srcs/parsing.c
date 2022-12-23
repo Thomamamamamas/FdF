@@ -78,15 +78,12 @@ void	allocate_actual_line(t_fdf *fdf, char *str, int y)
 	while (line[x] != NULL)
 	{
 		n = 0;
-		while (line[x][n])
+		while (line[x][n] && !is_hexadecimal_nb(line[x]))
 		{
 			if (line[x][n] == '-')
 				n++;
 			if (!ft_isdigit(line[x][n]) && line[x][n] != '\n' && line[x][n] != ' ')
-			{
 				fdf->prog.error_code = 2;
-			}
-			
 			n++;
 		}
 		x++;

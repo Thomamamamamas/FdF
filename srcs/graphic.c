@@ -24,7 +24,7 @@ void	draw_grid(t_fdf *fdf)
 		x = 0;
 		while (x < fdf->matrix_col[y])
 		{
-			mlx_pixel_put(fdf->prog.mlx, fdf->prog.win, fdf->matrix[y][x].x, fdf->matrix[y][x].y, WHITE);
+			mlx_pixel_put(fdf->prog.mlx, fdf->prog.win, fdf->matrix[y][x].x, fdf->matrix[y][x].y, rgb_to_hex(fdf->matrix[y][x].color));
 			x++;
 		}
 		y++;
@@ -33,51 +33,69 @@ void	draw_grid(t_fdf *fdf)
 
 void	bresenham_line(t_fdf *fdf, t_vector2 coord1, t_vector2 coord2)
 {
-	float	x1 =  coord1.x, y1 = coord1.y;
-	float	x2 = coord2.x, y2 = coord2.y;
-	float	ex = fabs(x2 - x1);
-	float 	ey = fabs(y2 - y1);
-	float	dx = 2 * ex;
-	float	dy = 2 * ey;
-	float	DX = ex;
-	float	DY = ey;
-	int		i = 0;
-	int		Xincr = 1;
-	int		Yincr = 1;
+	t_vector2	v1;
+	t_vector2	v2;
+	t_vector2	ev;
 
-	if (x1 > x2)
-		Xincr = -1;
-	if (y1 > y2)
-		Yincr = -1;
-	if (DX > DY)
-	{
-		while (i <= DX)
-		{
-			mlx_pixel_put(fdf->prog.mlx, fdf->prog.win, x1, y1, WHITE);	
-			i++;
-			x1 += Xincr;
-			ex -= dy;
-			if (ex < 0)
-			{
-				y1 += Yincr;
-				ex += dx;
-			}
-		}
-	}
+	v1.x = coord1.x;
+	v1.y = coord1.y;
+	v1.color = coord1.color;
+	v2.x = coord2.x;
+	v2.y = coord2.y;
+	v2.color = coord2.color;
+	ev.x = fabs(v2.x - v1.x);
+	ev.y = fabs(v2.y - v1.y);
+	if (ev.x > ev.y)
+		bresenham_base_case(fdf, v1, v2, ev);
 	else
+		bresenham_inverse_case(fdf, v1, v2, ev);
+}
+
+void	bresenham_base_case(t_fdf *fdf, t_vector2 v1, t_vector2 v2, t_vector2 ev)
+{
+	int		i;
+	float	big_dx;
+	t_vector2	dv;
+
+	dv.x = 2 * ev.x;
+	dv.y = 2 * ev.y;
+	big_dx = ev.x;
+	i = 1;
+	while (i <= big_dx)
 	{
-		while (i <= DY)
+		mlx_pixel_put(fdf->prog.mlx, fdf->prog.win, v1.x, v1.y, get_line_color(v1.color, v2.color, i / big_dx));
+		v1.x = bresenham_increment_v1(v1.x, v2.x);
+		ev.x -= dv.y;
+		if (ev.x < 0)
 		{
-			mlx_pixel_put(fdf->prog.mlx, fdf->prog.win, x1, y1, WHITE);	
-			i++;
-			y1 += Yincr;
-			ey -= dx;
-			if (ey < 0)
-			{
-				x1 += Xincr;
-				ey += dy;
-			}
+			v1.y = bresenham_increment_v1(v1.y, v2.y);
+			ev.x += dv.x;
 		}
+		i++;
+	}
+}
+
+void	bresenham_inverse_case(t_fdf *fdf, t_vector2 v1, t_vector2 v2, t_vector2 ev)
+{
+	int		i;
+	float	big_dy;
+	t_vector2	dv;
+
+	dv.x = 2 * ev.x;
+	dv.y = 2 * ev.y;
+	big_dy = ev.y;
+	i = 1;
+	while (i <= big_dy)
+	{
+		mlx_pixel_put(fdf->prog.mlx, fdf->prog.win, v1.x, v1.y, get_line_color(v1.color, v2.color, i / big_dy));
+		v1.y = bresenham_increment_v1(v1.y, v2.y);
+		ev.y -= dv.x;
+		if (ev.y < 0)
+		{
+			v1.x = bresenham_increment_v1(v1.x, v2.x);
+			ev.y += dv.y;
+		}
+		i++;
 	}
 }
 
@@ -105,3 +123,4 @@ void	connect_points(t_fdf *fdf)
 		y++;
 	}
 }
+
