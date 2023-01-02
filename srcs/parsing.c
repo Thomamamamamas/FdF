@@ -10,13 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../headers/fdf.h"
-#include <stdio.h>
 
 //Compte le nombre de ligne du fichier
 int	number_of_line(char *file)
 {
 	int		fd;
-	size_t	line;
+	int		line;
 	char	caracter;
 
 	fd = open(file, O_RDWR);
@@ -36,17 +35,17 @@ int	number_of_line(char *file)
 void	parse_map(t_fdf *fdf, int fd)
 {
 	char	*str;
-	int	y;
+	int		y;
 
 	y = 0;
 	while (1)
 	{
 		str = get_next_line(fd);
-		if (!str || fdf->prog.error_code != 0)
+		if (!str || fdf->prg.error_code != 0)
 		{
 			if (str)
 				free(str);
-			fdf->matrix_line = y;
+			fdf->mx_line = y;
 			parse_windows_info(fdf);
 			return ;
 		}
@@ -61,36 +60,37 @@ void	parse_map(t_fdf *fdf, int fd)
 
 void	allocate_matrix(t_fdf *fdf, char *file)
 {
-	fdf->matrix_line = number_of_line(file);
-	fdf->coords = (t_vector3 **)malloc(sizeof(t_vector3 *) * fdf->matrix_line + 1);
-	fdf->matrix = (t_vector2 **)malloc(sizeof(t_vector2 *) * fdf->matrix_line + 1);
-	fdf->matrix_col = (int *)malloc(sizeof(int) * fdf->matrix_line + 1);
+	fdf->mx_line = number_of_line(file);
+	fdf->coords = (t_v3 **)malloc(sizeof(t_v3 *) * fdf->mx_line + 1);
+	fdf->mx = (t_v2 **)malloc(sizeof(t_v2 *) * fdf->mx_line + 1);
+	fdf->mx_col = (int *)malloc(sizeof(int) * fdf->mx_line + 1);
 }
 
 void	allocate_actual_line(t_fdf *fdf, char *str, int y)
 {
-	char	**line;
+	char	**tmp;
 	int		x;
 	int		n;
 
-	line = ft_split(str, ' ');
+	tmp = ft_split(str, ' ');
 	x = 0;
-	while (line[x] != NULL)
+	while (tmp[x] != NULL)
 	{
 		n = 0;
-		while (line[x][n] && !is_hexadecimal_nb(line[x]))
+		while (tmp[x][n] && !is_hexadecimal_nb(tmp[x]))
 		{
-			if (line[x][n] == '-')
+			if (tmp[x][n] == '-')
 				n++;
-			if (!ft_isdigit(line[x][n]) && line[x][n] != '\n' && line[x][n] != ' ')
-				fdf->prog.error_code = 2;
+			if (!ft_isdigit(tmp[x][n]) && tmp[x][n] != '\n' && tmp[x][n] != ' ')
+				fdf->prg.error_code = 2;
 			n++;
 		}
 		x++;
 	}
-	fdf->coords[y] = (t_vector3 *)malloc(sizeof(t_vector3) * x + 1);
-	fdf->matrix[y] = (t_vector2 *)malloc(sizeof(t_vector2) * x + 1);
-	fdf->matrix_col[y] = x;
+	free_2d_char(tmp);
+	fdf->coords[y] = (t_v3 *)malloc(sizeof(t_v3) * x + 1);
+	fdf->mx[y] = (t_v2 *)malloc(sizeof(t_v2) * x + 1);
+	fdf->mx_col[y] = x;
 }
 
 void	parse_windows_info(t_fdf *fdf)
@@ -99,14 +99,14 @@ void	parse_windows_info(t_fdf *fdf)
 	int	y;
 
 	y = 0;
-	fdf->prog.max_height = fdf->matrix_line;
-	fdf->prog.max_width = fdf->matrix_col[y];
-	while (y < fdf->matrix_line)
+	fdf->prg.max_height = fdf->mx_line;
+	fdf->prg.max_width = fdf->mx_col[y];
+	while (y < fdf->mx_line)
 	{
 		x = 0;
-		if (fdf->matrix_col[y] > fdf->prog.max_width)
-			fdf->prog.max_width = fdf->matrix_col[y];
-		while (x < fdf->matrix_col[y])
+		if (fdf->mx_col[y] > fdf->prg.max_width)
+			fdf->prg.max_width = fdf->mx_col[y];
+		while (x < fdf->mx_col[y])
 			x++;
 		y++;
 	}

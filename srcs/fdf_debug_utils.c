@@ -12,13 +12,13 @@
 #include "../headers/fdf.h"
 #include <stdio.h>
 
-void	print_vector2(t_vector2 vector)
+void	print_vector2(t_v2 vector)
 {
 	printf("(%.2f, %.2f) color : ", vector.x, vector.y);
 	print_rgb(vector.color);
 }
 
-void	print_vector3(t_vector3 vector)
+void	print_vector3(t_v3 vector)
 {
 	printf("(%.2f, %.2f, %.2f) color : ", vector.x, vector.y, vector.z);
 	print_rgb(vector.color);
@@ -29,19 +29,19 @@ void	print_rgb(t_rgb color)
 	printf("(R: %d G: %d B: %d)\n", color.r, color.g, color.b);
 }
 
-void	print_matrix(t_fdf *fdf)
+void	print_mx(t_fdf *fdf)
 {
 	int	x;
 	int	y;
 
 	y = 0;
 	printf("__________MATRIX INFO__________\n");
-	while (y < fdf->matrix_line)
+	while (y < fdf->mx_line)
 	{
 		x = 0;
-		while (x < fdf-> matrix_col[y])
+		while (x < fdf-> mx_col[y])
 		{
-			print_vector2(fdf->matrix[y][x]);
+			print_vector2(fdf->mx[y][x]);
 			x++;
 		}
 		printf("\n");
@@ -63,10 +63,10 @@ void	print_coords(t_fdf *fdf)
 	int	y;
 
 	y = 0;
-	while (y < fdf->matrix_line)
+	while (y < fdf->mx_line)
 	{
 		x = 0;
-		while (x < fdf-> matrix_col[y])
+		while (x < fdf-> mx_col[y])
 		{
 			print_vector3(fdf->coords[y][x]);
 			x++;
@@ -79,10 +79,10 @@ void	print_coords(t_fdf *fdf)
 void	print_window_info(t_fdf *fdf)
 {
 	printf("__________WINDOW INFO__________\n");
-	printf("win height = %.2f\n", fdf->prog.win_height); 
-	printf("win width = %.2f\n", fdf->prog.win_width); 
-	printf("marginx = %.2f\n", fdf->prog.marginx); 
-	printf("marginy = %.2f\n", fdf->prog.marginy); 
-	printf("grid = %d\n", fdf->prog.grid); 
+	printf("win height = %.2f\n", fdf->prg.height);
+	printf("win width = %.2f\n", fdf->prg.width);
+	printf("marginx = %.2f\n", fdf->prg.marginx);
+	printf("marginy = %.2f\n", fdf->prg.marginy);
+	printf("grid = %d\n", fdf->prg.grid);
 	printf("_______________________________\n");
 }

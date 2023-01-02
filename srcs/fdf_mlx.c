@@ -12,13 +12,6 @@
 #include "../headers/fdf.h"
 #include <stdio.h>
 
-int	close_window(t_fdf *fdf)
-{
-	mlx_destroy_window(fdf->prog.mlx, fdf->prog.win);
-	exit(0);
-	return (-1);
-}
-
 void	change_colorset(t_fdf *fdf)
 {
 	if (fdf->colorset_id == 2)
@@ -27,16 +20,52 @@ void	change_colorset(t_fdf *fdf)
 		fdf->colorset_id = fdf->colorset_id + 1;
 	fdf->colorset = assign_colorset(fdf->colorset_id);
 	get_matrix_colors(fdf);
-	mlx_clear_window(fdf->prog.mlx, fdf->prog.win);
+	mlx_clear_window(fdf->mlx, fdf->win);
 	draw_grid(fdf);
 	connect_points(fdf);
 }
 
-int	key_pressed(int keycode, t_fdf *fdf)
+void	moove_matrix(t_fdf *fdf, int keycode)
 {
-	if (keycode == KEY_CODE_ESC)
-		close_window(fdf);
-	if (keycode == KEY_CODE_C)
+	int	x;
+	int	y;
+
+	y = 0;
+	while (y < fdf->mx_line)
+	{
+		x = 0;
+		while (x < fdf->mx_col[y])
+		{
+			if (keycode == CODE_W)
+				fdf->mx[y][x].y = fdf->mx[y][x].y - MOOVE_Y;
+			else if (keycode == CODE_S)
+				fdf->mx[y][x].y = fdf->mx[y][x].y + MOOVE_Y;
+			else if (keycode == CODE_D)
+				fdf->mx[y][x].x = fdf->mx[y][x].x + MOOVE_X;
+			else if (keycode == CODE_A)
+				fdf->mx[y][x].x = fdf->mx[y][x].x - MOOVE_X;
+			x++;
+		}
+		y++;
+	}
+	redraw_matrix(fdf);
+}
+
+int	redraw_matrix(t_fdf *fdf)
+{
+	mlx_clear_window(fdf->mlx, fdf->win);
+	draw_grid(fdf);
+	connect_points(fdf);
+	return (0);
+}
+
+int	key_pressed(int code, t_fdf *fdf)
+{
+	if (code == CODE_ESC)
+		end_fdf(fdf);
+	if (code == CODE_C)
 		change_colorset(fdf);
+	if (code == CODE_W || code == CODE_S || code == CODE_A || code == CODE_D)
+		moove_matrix(fdf, code);
 	return (0);
 }

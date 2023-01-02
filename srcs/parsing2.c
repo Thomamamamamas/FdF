@@ -1,5 +1,4 @@
 #include "../headers/fdf.h"
-#include <stdio.h>
 
 void	parse_actual_line(t_fdf *fdf, char *str, int y)
 {
@@ -8,11 +7,12 @@ void	parse_actual_line(t_fdf *fdf, char *str, int y)
 
 	line = ft_split(str, ' ');
 	x = 0;
-	while (line[x] != NULL && fdf->prog.error_code == 0)
+	while (line[x] != NULL && fdf->prg.error_code == 0)
 	{
 		parse_actual_coord(fdf, line[x], x, y);
 		x++;
 	}
+	free_2d_char(line);
 }
 
 void	parse_actual_coord(t_fdf *fdf, char *str, int x, int y)
@@ -24,12 +24,13 @@ void	parse_actual_coord(t_fdf *fdf, char *str, int x, int y)
 
 void	actual_coord_to_iso(t_fdf *fdf, int x, int y, int z)
 {
-	fdf->matrix[y][x].x = x * cos(0.5235) + y * cos(0.5335 + 2.0944) + z * cos(0.5235 - 2.0944);
-	fdf->matrix[y][x].y = x * sin(0.5235) + y * sin(0.5235 + 2.0944) + z * sin(0.5235 - 2.0944);
-	fdf->matrix[y][x].x = (fdf->matrix[y][x].x * fdf->prog.grid) + fdf->prog.marginx;
-	fdf->matrix[y][x].y = (fdf->matrix[y][x].y * fdf->prog.grid) + fdf->prog.marginy;
+	fdf->mx[y][x].x = x * cos(0.52) + y * cos(0.53 + 2.09);
+	fdf->mx[y][x].x = fdf->mx[y][x].x + z * cos(0.52 - 2.09);
+	fdf->mx[y][x].x = (fdf->mx[y][x].x * fdf->prg.grid) + fdf->prg.marginx;
+	fdf->mx[y][x].y = x * sin(0.52) + y * sin(0.52 + 2.09);
+	fdf->mx[y][x].y = fdf->mx[y][x].y + z * sin(0.52 - 2.09);
+	fdf->mx[y][x].y = (fdf->mx[y][x].y * fdf->prg.grid) + fdf->prg.marginy;
 }
-
 
 void	convert_coords(t_fdf *fdf)
 {
@@ -37,10 +38,10 @@ void	convert_coords(t_fdf *fdf)
 	int	y;
 
 	y = 0;
-	while (y < fdf->matrix_line)
+	while (y < fdf->mx_line)
 	{
 		x = 0;
-		while (x < fdf->matrix_col[y])
+		while (x < fdf->mx_col[y])
 		{
 			actual_coord_to_iso(fdf, x, y, fdf->coords[y][x].z);
 			x++;

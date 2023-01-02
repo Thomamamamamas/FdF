@@ -17,19 +17,27 @@ int	main(int argc, char **argv)
 {
 	t_fdf		fdf;
 
-	if (argc < 2)
-		return (-1);
+	if (argc != 2)
+	{
+		if (argc < 2)
+			fdf.prg.error_code = 3;
+		else
+			fdf.prg.error_code = 4;
+		error_gestion(&fdf);
+		return (1);
+	}
 	fdf = init_fdf(argv[1]);
-	printf("error code = %d\n", fdf.prog.error_code);
-	if (fdf.prog.error_code == 0)
+	if (fdf.prg.error_code == 0)
 	{
 		init_window(&fdf);
 		draw_grid(&fdf);
 		connect_points(&fdf);
-		//if pressed a key
-		mlx_hook(fdf.prog.win, KEY_PRESSED, 0, &key_pressed, &fdf);
-		mlx_loop(fdf.prog.mlx);
+		mlx_hook(fdf.win, KEY_PRESSED, 0, &key_pressed, &fdf);
+		mlx_hook(fdf.win, ON_EXPOSE, 0, &redraw_matrix, &fdf);
+		mlx_hook(fdf.win, ON_DESTROY, 0, &end_fdf, &fdf);
+		mlx_loop(fdf.mlx);
 	}
-	if (fdf.prog.error_code != 0)
+	if (fdf.prg.error_code != 0)
 		error_gestion(&fdf);
+	end_fdf(&fdf);
 }

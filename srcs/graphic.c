@@ -15,27 +15,31 @@
 
 void	draw_grid(t_fdf *fdf)
 {
-	int	x;
-	int	y;
+	t_v2	v;
+	int		x;
+	int		y;
 
 	y = 0;
-	while (y < fdf->matrix_line)
+	while (y < fdf->mx_line)
 	{
 		x = 0;
-		while (x < fdf->matrix_col[y])
+		while (x < fdf->mx_col[y])
 		{
-			mlx_pixel_put(fdf->prog.mlx, fdf->prog.win, fdf->matrix[y][x].x, fdf->matrix[y][x].y, rgb_to_hex(fdf->matrix[y][x].color));
+			v.x = fdf->mx[y][x].x;
+			v.y = fdf->mx[y][x].y;
+			v.color = fdf->mx[y][x].color;
+			mlx_pixel_put(fdf->mlx, fdf->win, v.x, v.y, rgb_hex(v.color));
 			x++;
 		}
 		y++;
 	}
 }
 
-void	bresenham_line(t_fdf *fdf, t_vector2 coord1, t_vector2 coord2)
+void	bresenham_line(t_fdf *fdf, t_v2 coord1, t_v2 coord2)
 {
-	t_vector2	v1;
-	t_vector2	v2;
-	t_vector2	ev;
+	t_v2	v1;
+	t_v2	v2;
+	t_v2	ev;
 
 	v1.x = coord1.x;
 	v1.y = coord1.y;
@@ -51,11 +55,12 @@ void	bresenham_line(t_fdf *fdf, t_vector2 coord1, t_vector2 coord2)
 		bresenham_inverse_case(fdf, v1, v2, ev);
 }
 
-void	bresenham_base_case(t_fdf *fdf, t_vector2 v1, t_vector2 v2, t_vector2 ev)
+void	bresenham_base_case(t_fdf *fdf, t_v2 v1, t_v2 v2, t_v2 ev)
 {
 	int		i;
+	int		color;
 	float	big_dx;
-	t_vector2	dv;
+	t_v2	dv;
 
 	dv.x = 2 * ev.x;
 	dv.y = 2 * ev.y;
@@ -63,7 +68,8 @@ void	bresenham_base_case(t_fdf *fdf, t_vector2 v1, t_vector2 v2, t_vector2 ev)
 	i = 1;
 	while (i <= big_dx)
 	{
-		mlx_pixel_put(fdf->prog.mlx, fdf->prog.win, v1.x, v1.y, get_line_color(v1.color, v2.color, i / big_dx));
+		color = line_color(v1.color, v2.color, i / big_dx);
+		mlx_pixel_put(fdf->mlx, fdf->win, v1.x, v1.y, color);
 		v1.x = bresenham_increment_v1(v1.x, v2.x);
 		ev.x -= dv.y;
 		if (ev.x < 0)
@@ -75,11 +81,12 @@ void	bresenham_base_case(t_fdf *fdf, t_vector2 v1, t_vector2 v2, t_vector2 ev)
 	}
 }
 
-void	bresenham_inverse_case(t_fdf *fdf, t_vector2 v1, t_vector2 v2, t_vector2 ev)
+void	bresenham_inverse_case(t_fdf *fdf, t_v2 v1, t_v2 v2, t_v2 ev)
 {
 	int		i;
+	int		color;
 	float	big_dy;
-	t_vector2	dv;
+	t_v2	dv;
 
 	dv.x = 2 * ev.x;
 	dv.y = 2 * ev.y;
@@ -87,7 +94,8 @@ void	bresenham_inverse_case(t_fdf *fdf, t_vector2 v1, t_vector2 v2, t_vector2 ev
 	i = 1;
 	while (i <= big_dy)
 	{
-		mlx_pixel_put(fdf->prog.mlx, fdf->prog.win, v1.x, v1.y, get_line_color(v1.color, v2.color, i / big_dy));
+		color = line_color(v1.color, v2.color, i / big_dy);
+		mlx_pixel_put(fdf->mlx, fdf->win, v1.x, v1.y, color);
 		v1.y = bresenham_increment_v1(v1.y, v2.y);
 		ev.y -= dv.x;
 		if (ev.y < 0)
@@ -105,22 +113,21 @@ void	connect_points(t_fdf *fdf)
 	int	y;
 
 	y = 0;
-	while (y < fdf->matrix_line)
+	while (y < fdf->mx_line)
 	{
 		x = 0;
-		while (x < fdf->matrix_col[y])
+		while (x < fdf->mx_col[y])
 		{
-			if (x < fdf->matrix_col[y] - 1)
+			if (x < fdf->mx_col[y] - 1)
 			{
-				bresenham_line(fdf, fdf->matrix[y][x], fdf->matrix[y][x + 1]);
+				bresenham_line(fdf, fdf->mx[y][x], fdf->mx[y][x + 1]);
 			}
-			if (y > 0 && fdf->matrix_col[y - 1] > x)
+			if (y > 0 && fdf->mx_col[y - 1] > x)
 			{
-				bresenham_line(fdf, fdf->matrix[y][x], fdf->matrix[y - 1][x]);
+				bresenham_line(fdf, fdf->mx[y][x], fdf->mx[y - 1][x]);
 			}
 			x++;
 		}
 		y++;
 	}
 }
-

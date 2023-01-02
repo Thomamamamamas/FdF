@@ -10,33 +10,46 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../headers/fdf.h"
-#include <stdio.h>
 
 t_fdf	init_fdf(char *file)
 {
 	t_fdf	fdf;
 	int		fd;
 
-	fdf.prog.error_code = 0;
+	fdf.prg.error_code = 0;
 	fdf.colorset_id = 0;
-	fdf.colorset.color_white = WHITE;
 	fdf.colorset = assign_colorset(fdf.colorset_id);
 	fd = open(file, O_RDWR);
 	if (fd < 0)
-		fdf.prog.error_code = 1;
+	{
+		fdf.prg.error_code = 1;
+		return (fdf);
+	}
 	allocate_matrix(&fdf, file);
 	parse_map(&fdf, fd);
 	get_matrix_relief(&fdf);
-	fdf.prog.grid = GRID;
-	fdf.prog.marginx = 0;
-	fdf.prog.marginy = 0;
-	fdf.prog.win_width = 1921;
-	fdf.prog.win_height = 1081;
+	fdf.prg.grid = GRID;
+	fdf.prg.marginx = 0;
+	fdf.prg.marginy = 0;
+	fdf.prg.width = 1921;
+	fdf.prg.height = 1081;
 	convert_coords(&fdf);
 	get_matrix_limits(&fdf);
 	get_matrix_colors(&fdf);
 	close(fd);
 	return (fdf);
+}
+
+void	error_gestion(t_fdf *fdf)
+{
+	if (fdf->prg.error_code == 1)
+		ft_putstr_fd("Error: Can't open file", 2);
+	else if (fdf->prg.error_code == 2)
+		ft_putstr_fd("Error: Line in file not valid", 2);
+	else if (fdf->prg.error_code == 3)
+		ft_putstr_fd("Error: Need one argument", 2);
+	else if (fdf->prg.error_code == 4)
+		ft_putstr_fd("Error: Too many arguments", 2);
 }
 
 void	get_matrix_limits(t_fdf *fdf)
@@ -45,23 +58,23 @@ void	get_matrix_limits(t_fdf *fdf)
 	int	y;
 
 	y = 0;
-	fdf->top = fdf->matrix[0][0].y;
-	fdf->bottom = fdf->matrix[0][0].y;
-	fdf->left = fdf->matrix[0][0].x;
-	fdf->right = fdf->matrix[0][0].x;
-	while (y < fdf->matrix_line)
+	fdf->top = fdf->mx[0][0].y;
+	fdf->bottom = fdf->mx[0][0].y;
+	fdf->left = fdf->mx[0][0].x;
+	fdf->right = fdf->mx[0][0].x;
+	while (y < fdf->mx_line)
 	{
 		x = 0;
-		while (x < fdf->matrix_col[y])
+		while (x < fdf->mx_col[y])
 		{
-			if (fdf->matrix[y][x].y < fdf->top)
-				fdf->top = fdf->matrix[y][x].y;
-			if (fdf->matrix[y][x].y > fdf->bottom)
-				fdf->bottom = fdf->matrix[y][x].y;
-			if (fdf->matrix[y][x].x < fdf->left)
-				fdf->left = fdf->matrix[y][x].x;
-			if (fdf->matrix[y][x].x > fdf->right)
-				fdf->right = fdf->matrix[y][x].x;
+			if (fdf->mx[y][x].y < fdf->top)
+				fdf->top = fdf->mx[y][x].y;
+			if (fdf->mx[y][x].y > fdf->bottom)
+				fdf->bottom = fdf->mx[y][x].y;
+			if (fdf->mx[y][x].x < fdf->left)
+				fdf->left = fdf->mx[y][x].x;
+			if (fdf->mx[y][x].x > fdf->right)
+				fdf->right = fdf->mx[y][x].x;
 			x++;
 		}
 		y++;
@@ -77,10 +90,10 @@ void	get_matrix_relief(t_fdf *fdf)
 	fdf->medium = 0;
 	fdf->largest = fdf->coords[0][0].z;
 	y = 0;
-	while (y < fdf->matrix_line)
+	while (y < fdf->mx_line)
 	{
 		x = 0;
-		while (x < fdf->matrix_col[y])
+		while (x < fdf->mx_col[y])
 		{
 			if (fdf->coords[y][x].z > fdf->largest)
 				fdf->largest = fdf->coords[y][x].z;
