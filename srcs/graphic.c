@@ -6,12 +6,10 @@
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 09:35:58 by tcasale           #+#    #+#             */
-/*   Updated: 2021/12/26 18:23:48 by tcasale          ###   ########.fr       */
+/*   Updated: 2023/01/06 12:20:02 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../headers/fdf.h"
-#include "stdio.h"
 
 void	draw_grid(t_fdf *fdf)
 {
@@ -65,7 +63,7 @@ void	bresenham_base_case(t_fdf *fdf, t_v2 v1, t_v2 v2, t_v2 ev)
 	dv.x = 2 * ev.x;
 	dv.y = 2 * ev.y;
 	big_dx = ev.x;
-	i = 1;
+	i = 0;
 	while (i <= big_dx)
 	{
 		color = line_color(v1.color, v2.color, i / big_dx);
@@ -91,7 +89,7 @@ void	bresenham_inverse_case(t_fdf *fdf, t_v2 v1, t_v2 v2, t_v2 ev)
 	dv.x = 2 * ev.x;
 	dv.y = 2 * ev.y;
 	big_dy = ev.y;
-	i = 1;
+	i = 0;
 	while (i <= big_dy)
 	{
 		color = line_color(v1.color, v2.color, i / big_dy);

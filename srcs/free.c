@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/04 16:02:55 by tcasale           #+#    #+#             */
+/*   Updated: 2023/01/06 12:46:20 by tcasale          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../headers/fdf.h"
 #include <stdio.h>
 
@@ -8,10 +19,11 @@ int	end_fdf(t_fdf *fdf)
 		free_vector2_array(fdf->mx, fdf->mx_line);
 		free_vector3_array(fdf->coords, fdf->mx_line);
 		free(fdf->mx_col);
-		mlx_destroy_window(fdf->mlx, fdf->win);
-		system("leaks fdf");
+		if (fdf->prg.error_code != 2)
+			mlx_destroy_window(fdf->mlx, fdf->win);
 		exit(0);
 	}
+	exit(0);
 	return (0);
 }
 

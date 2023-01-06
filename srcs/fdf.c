@@ -6,12 +6,10 @@
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 11:18:12 by tcasale           #+#    #+#             */
-/*   Updated: 2021/12/26 18:20:21 by tcasale          ###   ########.fr       */
+/*   Updated: 2023/01/06 12:20:09 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../headers/fdf.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 int	main(int argc, char **argv)
 {
@@ -37,7 +35,6 @@ int	main(int argc, char **argv)
 		mlx_hook(fdf.win, ON_DESTROY, 0, &end_fdf, &fdf);
 		mlx_loop(fdf.mlx);
 	}
-	if (fdf.prg.error_code != 0)
-		error_gestion(&fdf);
+	error_gestion(&fdf);
 	end_fdf(&fdf);
 }

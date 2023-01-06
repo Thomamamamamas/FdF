@@ -6,7 +6,7 @@
 /*   By: tcasale <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 14:54:45 by tcasale           #+#    #+#             */
-/*   Updated: 2022/07/03 00:18:47 by tcasale          ###   ########.fr       */
+/*   Updated: 2023/01/06 12:42:43 by tcasale          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../headers/fdf.h"
@@ -54,6 +54,8 @@ void	parse_map(t_fdf *fdf, int fd)
 			allocate_actual_line(fdf, str, y);
 			parse_actual_line(fdf, str, y);
 		}
+		if (str)
+			free(str);
 		y++;
 	}
 }
