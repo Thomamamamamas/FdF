@@ -6,7 +6,7 @@
 #    By: tcasale <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/13 17:32:54 by tcasale           #+#    #+#              #
-#    Updated: 2023/01/06 11:13:59 by tcasale          ###   ########.fr        #
+#    Updated: 2023/01/06 12:52:09 by tcasale          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ RM		= rm -f
 all:	$(NAME)
 
 $(NAME):	$(OBJS) libft get_next_line mlx
-			$(CC) $(OBJS) $(FDFLAGS) ./srcs/libftprintf/libftprintf.a ./srcs/get_next_line/get_next_line.a -g -o $(NAME)
+			$(CC) $(OBJS) $(FDFLAGS) ./srcs/libftprintf/libftprintf.a ./srcs/get_next_line/get_next_line.a -o $(NAME)
 
 bonus:	$(NAME)
 
